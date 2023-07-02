@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 
 const items: MenuProps['items'] = [
     {
-        label: <Link to='/'>Home</Link>,
+        label: <Link to='/' className='text-decoration-none'>Home</Link>,
         key: 'home',
         icon: <AppstoreOutlined/>,
     },
@@ -31,14 +31,14 @@ const items: MenuProps['items'] = [
     },
 
     {
-        label: <Link to='/login'>Login</Link>,
+        label: <Link to='/login' className='text-decoration-none'>Login</Link>,
         key: 'login',
         icon: <UserOutlined/>,
         className: 'ms-auto',
     },
 
     {
-        label: <Link to='/register'>Register</Link>,
+        label: <Link to='/register' className='text-decoration-none'>Register</Link>,
         key: 'register',
         icon: <UserAddOutlined/>,
     },
