@@ -3,12 +3,12 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAtOLn_Skx-0rmjUjAw61JRnm40B3OUuvM",
-    authDomain: "online-shop-356ce.firebaseapp.com",
-    projectId: "online-shop-356ce",
-    storageBucket: "online-shop-356ce.appspot.com",
-    messagingSenderId: "823527717618",
-    appId: "1:823527717618:web:e6573c00df0bf7bba3ee6b"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
