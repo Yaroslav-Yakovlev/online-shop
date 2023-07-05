@@ -1,18 +1,53 @@
-import React, { useState, useEffect } from 'react';
-
+import React, {useState, useEffect} from 'react';
+import {auth} from '../../firebase';
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 
 const RegisterComplete: React.FC = () => {
     const [email, setEmail] = useState<string | null>('');
     const [password, setPassword] = useState<string>('');
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         setEmail(window.localStorage.getItem('emailForRegistration'));
-    },[])
+    }, [])
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // validation
 
+        if (!email || !password) {
+            toast.error('Email and password is required');
+            return;
+        }
+
+        if (password.length < 6) {
+            toast.error('Password must be at least 6 characters long');
+            return;
+        }
+
+        try {
+            const result = await auth.signInWithEmailLink(email ?? '', window.location.href);
+
+            if (result.user?.emailVerified) {
+                window.localStorage.removeItem('emailForRegistration');
+
+                let user = auth.currentUser;
+                await user?.updatePassword(password);
+                const idTokenResult = await user?.getIdTokenResult();
+
+                console.log('user', user, 'idTokenResult', idTokenResult)
+
+                navigate('/');
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message);
+                console.log(error);
+            }
+        }
     };
 
     const CompleteRegisterForm = () => <form onSubmit={handleSubmit}>
@@ -25,6 +60,7 @@ const RegisterComplete: React.FC = () => {
 
         <input
             type='password'
+            autoComplete='on'
             className='form-control'
             value={password ?? ''}
             onChange={(e) => setPassword(e.target.value)}
@@ -33,7 +69,7 @@ const RegisterComplete: React.FC = () => {
         />
 
         <button type='submit' className='btn btn-primary mt-3'>
-           Complete Register
+            Complete Register
         </button>
     </form>
 
