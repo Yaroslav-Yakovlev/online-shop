@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {auth} from '../../firebase';
-import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import { auth } from '../../firebase';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 const RegisterComplete: React.FC = () => {
@@ -38,14 +38,11 @@ const RegisterComplete: React.FC = () => {
                 await user?.updatePassword(password);
                 const idTokenResult = await user?.getIdTokenResult();
 
-                console.log('user', user, 'idTokenResult', idTokenResult)
-
                 navigate('/');
             }
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(error.message);
-                console.log(error);
             }
         }
     };
