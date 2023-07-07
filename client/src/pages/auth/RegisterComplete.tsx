@@ -55,6 +55,8 @@ const RegisterComplete: React.FC = () => {
             disabled
         />
 
+        <br/>
+
         <input
             type='password'
             autoComplete='on'

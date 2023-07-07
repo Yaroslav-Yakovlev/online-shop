@@ -20,8 +20,8 @@ export const userSlice = createSlice({
             state.email = email;
             state.idToken = idToken;
         },
-        logOut(state, action: PayloadAction) {
-            return action.payload;
+        logOut() {
+            return;
         }
     }
 });

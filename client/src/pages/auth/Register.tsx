@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { auth } from "../../firebase";
-import { toast } from "react-toastify";
+import React, {useState} from 'react';
+import {auth} from "../../firebase";
+import {toast} from "react-toastify";
 
 
 const Register: React.FC = () => {
@@ -22,19 +22,22 @@ const Register: React.FC = () => {
         setEmail('');
     };
 
-    const registerForm = () => <form onSubmit={handleSubmit}>
-        <input
-            type='email'
-            className='form-control'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoFocus
-        />
+    const registerForm = () => (
+        <form onSubmit={handleSubmit}>
+            <input
+                type='email'
+                className='form-control'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoFocus
+                placeholder='Your email'
+            />
 
-        <button type='submit' className='btn btn-primary mt-3'>
-            Register
-        </button>
-    </form>
+            <button type='submit' className='btn btn-primary mt-3'>
+                Register
+            </button>
+        </form>
+    );
 
 
     return (
