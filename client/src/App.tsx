@@ -29,6 +29,7 @@ const App: React.FC = () => {
                 dispatch(logGetInUser(payload));
             }
          });
+         return () => unsubscribe();
     }, []);
 
     return (

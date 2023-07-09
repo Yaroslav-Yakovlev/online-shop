@@ -4,6 +4,7 @@ import {Menu} from 'antd';
 import {AppstoreOutlined, SettingOutlined, UserOutlined, UserAddOutlined, LogoutOutlined} from '@ant-design/icons';
 import {Link, useNavigate} from "react-router-dom";
 import firebase from "firebase/compat/app";
+
 import {useAppDispatch} from "../../hooks";
 import {logOut} from "../../features/userSlice";
 
@@ -13,13 +14,19 @@ const Header: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const handleClick: MenuProps['onClick'] = (e): void => {
+    const handleClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);
     };
 
     const handleLogout = () => {
         firebase.auth().signOut();
-        dispatch(logOut());
+
+        const payload = {
+            email: '',
+            idToken: '',
+        };
+
+        dispatch(logOut(payload));
 
         navigate('/login');
     };

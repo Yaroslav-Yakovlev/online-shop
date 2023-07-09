@@ -47,7 +47,8 @@ const RegisterComplete: React.FC = () => {
         }
     };
 
-    const CompleteRegisterForm = () => <form onSubmit={handleSubmit}>
+    const CompleteRegisterForm = () => (
+        <form onSubmit={handleSubmit}>
         <input
             type='email'
             className='form-control'
@@ -71,7 +72,7 @@ const RegisterComplete: React.FC = () => {
             Complete Register
         </button>
     </form>
-
+    );
 
     return (
         <div className='container p-5'>
