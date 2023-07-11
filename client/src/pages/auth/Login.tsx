@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from "antd";
-import {MailOutlined} from '@ant-design/icons';
-import {auth} from "../../firebase";
+import {MailOutlined, GoogleOutlined} from '@ant-design/icons';
+import {auth, googleAuthProvider} from "../../firebase";
 import {useAppDispatch} from "../../hooks";
 import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
@@ -15,44 +15,58 @@ const Login: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e:React.SyntheticEvent) => {
+    const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-           const result = await auth.signInWithEmailAndPassword(email, password);
-           const {user} = result;
-           const idTokenResult = await user?.getIdTokenResult();
+            const result = await auth.signInWithEmailAndPassword(email, password);
+            const {user} = result;
+            const idTokenResult = await user?.getIdTokenResult();
 
             const payload = {
                 email: user?.email,
                 idToken: idTokenResult?.token,
             };
+            dispatch(logGetInUser(payload));
 
-           dispatch(logGetInUser(payload));
-
-           navigate('/');
+            navigate('/');
 
         } catch (error) {
             if (error instanceof Error) {
-                console.log(error);
                 toast.error(error.message);
                 setLoading(false);
             }
         }
     };
 
+    const googleLogin = async () => {
+        setLoading(true);
+        const result = await auth.signInWithPopup(googleAuthProvider);
+        const {user} = result;
+        const idTokenResult = await user?.getIdTokenResult();
+
+        const payload = {
+            email: user?.email,
+            idToken: idTokenResult?.token,
+        };
+
+        dispatch(logGetInUser(payload));
+
+        navigate('/');
+    };
+
     const loginForm = () => (
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={handleSubmit}>
             <div className="form-group">
-            <input
-                type='email'
-                className='form-control'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoFocus
-                placeholder='Your email'
-            />
+                <input
+                    type='email'
+                    className='form-control mt-3'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoFocus
+                    placeholder='Your email'
+                />
             </div>
 
             <br/>
@@ -69,18 +83,18 @@ const Login: React.FC = () => {
 
 
             <div className="text-center">
-            <Button
-                onClick={handleSubmit}
-                type='primary'
-                className='mt-3'
-                block
-                shape='round'
-                icon={<MailOutlined/>}
-                size='large'
-                disabled={!email || password.length < 6}
-            >
-                Login with Email/Password
-            </Button>
+                <Button
+                    onClick={handleSubmit}
+                    type='primary'
+                    className='mt-3'
+                    block
+                    shape='round'
+                    icon={<MailOutlined/>}
+                    size='large'
+                    disabled={!email || password.length < 6}
+                >
+                    Login with Email/Password
+                </Button>
             </div>
         </form>
     )
@@ -89,8 +103,25 @@ const Login: React.FC = () => {
         <div className='container p-5'>
             <div className='row'>
                 <div className='col-md-6 offset-md-3'>
-                    <h4>Login</h4>
+                    {loading ? (
+                        <h4 className='text-danger'>Loading...</h4>
+                    ) : (
+                        <h4>Login</h4>
+                    )}
                     {loginForm()}
+
+                    <Button
+                        onClick={googleLogin}
+                        type='primary' danger
+                        className='mt-3'
+                        block
+                        shape='round'
+                        icon={<GoogleOutlined/>}
+                        size='large'
+                    >
+                        Login with Google
+                    </Button>
+
                 </div>
             </div>
         </div>
