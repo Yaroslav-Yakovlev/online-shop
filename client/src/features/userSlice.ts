@@ -6,8 +6,8 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-    email: '',
-    idToken: '',
+    email: null,
+    idToken: undefined,
 };
 
 export const userSlice = createSlice({
@@ -15,16 +15,12 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         logGetInUser(state, action: PayloadAction<UserState>) {
-            const {email, idToken} = action.payload;
+            const { email, idToken } = action.payload;
+            return { ...state, email, idToken };
 
-            state.email = email;
-            state.idToken = idToken;
         },
-        logOut(state, action: PayloadAction<UserState>) {
-            const {email, idToken} = action.payload;
-
-            state.email = email;
-            state.idToken = idToken;
+        logOut(state) {
+            return { ...state, email: null, idToken: undefined };
         }
     }
 });

@@ -5,14 +5,17 @@ import {AppstoreOutlined, SettingOutlined, UserOutlined, UserAddOutlined, Logout
 import {Link, useNavigate} from "react-router-dom";
 import firebase from "firebase/compat/app";
 
-import {useAppDispatch} from "../../hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {logOut} from "../../features/userSlice";
 
+const {Item, SubMenu} = Menu;
 
 const Header: React.FC = () => {
     const [current, setCurrent] = useState<string>('home');
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    let userEmail = useAppSelector((state) => (state.user.email));
 
     const handleClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);
@@ -21,71 +24,46 @@ const Header: React.FC = () => {
     const handleLogout = () => {
         firebase.auth().signOut();
 
-        const payload = {
-            email: '',
-            idToken: '',
-        };
-
-        dispatch(logOut(payload));
+        dispatch(logOut());
 
         navigate('/login');
     };
 
 
-    const items: MenuProps['items'] = [
-        {
-            label: <Link to='/' className='text-decoration-none'>Home</Link>,
-            key: 'home',
-            icon: <AppstoreOutlined/>,
-        },
-
-        {
-            label: 'Username',
-            key: 'SubMenu',
-            icon: <SettingOutlined/>,
-
-            children: [
-                {
-                    label: 'Option 1',
-                    key: 'setting:1',
-                },
-                {
-                    label: 'Option 2',
-                    key: 'setting:2',
-                },
-                {
-                    label: 'Logout',
-                    key: 'setting:3',
-                    icon: <LogoutOutlined/>,
-                    onClick: handleLogout,
-                },
-
-            ],
-        },
-
-        {
-            label: <Link to='/login' className='text-decoration-none'>Login</Link>,
-            key: 'login',
-            icon: <UserOutlined/>,
-            className: 'ms-auto',
-        },
-
-        {
-            label: <Link to='/register' className='text-decoration-none'>Register</Link>,
-            key: 'register',
-            icon: <UserAddOutlined/>,
-        },
-    ];
-
-
     return (
-        <Menu
-            onClick={handleClick}
-            selectedKeys={[current]}
-            mode="horizontal"
-            items={items}
-            className='outline-none'
-        />
+        <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+            <Item key="home" icon={<AppstoreOutlined />}>
+                <Link to="/" className='text-decoration-none'>Home</Link>
+            </Item>
+
+
+            {!userEmail && (
+                <Item key="login" icon={<UserOutlined />} className="ms-auto">
+                    <Link to="/login" className='text-decoration-none' >Login</Link>
+                </Item>
+            )}
+
+            {!userEmail && (
+                <Item key="register" icon={<UserAddOutlined />} >
+                    <Link to="/register" className='text-decoration-none' >Register</Link>
+                </Item>
+            )}
+
+            {userEmail && (
+                <SubMenu
+                    key='subMenu'
+                    icon={<SettingOutlined />}
+                    title={userEmail && userEmail.split("@")[0]}
+                    className="ms-auto"
+                >
+                    <Item key="setting:1">Option 1</Item>
+                    <Item key="setting:2">Option 2</Item>
+                    <Item icon={<LogoutOutlined />} onClick={handleLogout}>
+                        Logout
+                    </Item>
+                </SubMenu>
+            )}
+        </Menu>
     )
 };
 export default Header;
