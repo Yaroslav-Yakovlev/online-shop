@@ -6,10 +6,11 @@ import {useAppDispatch} from "../../hooks";
 import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import {Link} from "react-router-dom";
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
-    const [password, setPassword] = useState<string>('123456');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     const dispatch = useAppDispatch();
@@ -122,6 +123,9 @@ const Login: React.FC = () => {
                         Login with Google
                     </Button>
 
+                    <Link to='/forgot/password' className='text-danger text-decoration-none float-end mt-3'>
+                        Forgot Password
+                    </Link>
                 </div>
             </div>
         </div>
