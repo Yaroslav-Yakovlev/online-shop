@@ -1,10 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {auth} from "../../firebase";
 import {toast} from "react-toastify";
+import {useAppSelector} from "../../hooks";
+import {useNavigate} from "react-router-dom";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const {user} = useAppSelector((state) => state);
+
+    useEffect(() => {
+        if (user && user.idToken) {
+            navigate('/');
+        }
+    }, [user]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

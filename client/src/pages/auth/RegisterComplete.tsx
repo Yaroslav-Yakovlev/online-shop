@@ -60,12 +60,12 @@ const RegisterComplete: React.FC = () => {
 
         <input
             type='password'
-            autoComplete='on'
             className='form-control'
             value={password ?? ''}
             onChange={(e) => setPassword(e.target.value)}
             placeholder='Password'
             autoFocus
+            autoComplete="current-password"
         />
 
         <button type='submit' className='btn btn-primary mt-3'>

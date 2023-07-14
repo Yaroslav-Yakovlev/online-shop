@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from "antd";
 import {MailOutlined, GoogleOutlined} from '@ant-design/icons';
 import {auth, googleAuthProvider} from "../../firebase";
-import {useAppDispatch} from "../../hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
@@ -12,6 +12,14 @@ const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+
+    const {user} = useAppSelector((state) => state);
+
+    useEffect(() => {
+        if (user && user.idToken) {
+            navigate('/');
+        }
+    }, [user]);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -67,6 +75,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     autoFocus
                     placeholder='Your email'
+                    autoComplete='username'
                 />
             </div>
 
@@ -79,6 +88,7 @@ const Login: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder='Your password'
+                    autoComplete="current-password"
                 />
             </div>
 

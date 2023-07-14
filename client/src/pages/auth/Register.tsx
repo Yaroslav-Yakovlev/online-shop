@@ -1,13 +1,24 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {auth} from "../../firebase";
 import {toast} from "react-toastify";
+import {useAppSelector} from "../../hooks";
+import {useNavigate} from "react-router-dom";
 
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState<string>('');
+    const {user} = useAppSelector((state) => state);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user && user.idToken) {
+            navigate('/');
+        }
+    }, [user]);
 
     const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         const config = {
             url: process.env.REACT_APP_REGISTER_REDIRECT_URL || '',
             handleCodeInApp: true,
@@ -31,6 +42,7 @@ const Register: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 autoFocus
                 placeholder='Your email'
+                autoComplete='username'
             />
 
             <button type='submit' className='btn btn-primary mt-3'>
