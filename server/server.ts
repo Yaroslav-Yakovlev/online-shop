@@ -1,14 +1,12 @@
-import { Request, Response } from "express";
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const {readdirSync} = require('fs');
 require("dotenv").config();
 
 const app = express();
-
 
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
@@ -21,20 +19,16 @@ mongoose.connect(process.env.DATABASE, {
         console.error('Error connecting to MongoDB:', error);
     });
 
-
+// middlewares
 app.use(morgan('dev'));
-app.use(bodyParser.json({ limit: '2mb' }));
+app.use(bodyParser.json({limit: '2mb'}));
 app.use(cors());
 
-// route
-app.get('/api', (req: Request, res: Response) => {
-    res.json({
-        data: 'hey you hit node API',
-    });
-})
+// routes middleware
+readdirSync('./routes').map((route: string) => app.use(`/api`, require('./routes/' + route)));
 
 // port
 
 const port = process.env.PORT || 8000
 
-app.listen(port, () => console.log(`Server is running on ${port}`))
+app.listen(port, () => console.log(`Server is running on ${port}`));
