@@ -7,10 +7,22 @@ import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
+import axios from 'axios';
+
+const createOrUpdateUser = async (authtoken: string | undefined) => {
+  return await axios.post(
+      `${process.env.REACT_APP_API}/create-or-update-user`,
+      {},
+      {
+      headers: {
+          authtoken,
+      },
+  });
+};
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
+    const [password, setPassword] = useState<string>('111111');
     const [loading, setLoading] = useState<boolean>(false);
 
     const {user} = useAppSelector((state) => state);
@@ -33,13 +45,17 @@ const Login: React.FC = () => {
             const {user} = result;
             const idTokenResult = await user?.getIdTokenResult();
 
-            const payload = {
-                email: user?.email,
-                idToken: idTokenResult?.token,
-            };
-            dispatch(logGetInUser(payload));
+            createOrUpdateUser(idTokenResult?.token)
+                .then((res) => console.log('create or update res', res))
+                .catch();
 
-            navigate('/');
+            // const payload = {
+            //     email: user?.email,
+            //     idToken: idTokenResult?.token,
+            // };
+            // dispatch(logGetInUser(payload));
+            //
+            // navigate('/');
 
         } catch (error) {
             if (error instanceof Error) {
