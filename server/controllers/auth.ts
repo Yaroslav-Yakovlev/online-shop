@@ -5,3 +5,4 @@ export const createOrUpdateUser = (req: Request, res: Response) => {
         data: 'hey you hit create-or-update-user API endpoint',
     });
 }
+
