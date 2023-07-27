@@ -1,10 +1,11 @@
-import {Schema, Types} from 'mongoose';
+import { Document, Schema, Types } from 'mongoose';
 import * as mongoose from "mongoose";
 
 
-interface IUser extends Document {
+export interface IUser extends Document {
     name: string,
     email: string,
+    picture?: string,
     role?: string,
     cart: any[],
     address: string,
@@ -21,12 +22,13 @@ const userSchema = new Schema<IUser>(
             require: true,
             index: true,
         },
+        picture: String,
         role: {
             type: String,
             default: 'subscriber',
         },
         cart: {
-            type: Array,
+            type: Schema.Types.Mixed,
             default: [],
         },
         address: String,
@@ -35,6 +37,6 @@ const userSchema = new Schema<IUser>(
     { timestamps: true}
 );
 
-const User = mongoose.model('User', userSchema)
+export const User = mongoose.model('User', userSchema)
 
 export default User;

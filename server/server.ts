@@ -1,3 +1,4 @@
+import {RequestHandler} from "express";
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -25,9 +26,8 @@ app.use(bodyParser.json({limit: '2mb'}));
 app.use(cors());
 
 // routes middleware
-
-// app.use('/api', authRoutes);
-fs.readdirSync('./routes').map((route: any) => app.use('/api', require('./routes/' + route)))
+// app.use('/api', authCheck);
+fs.readdirSync('./routes').map((route: string) => app.use('/api', require('./routes/' + route) as RequestHandler))
 
 // port
 const port = process.env.PORT || 8000

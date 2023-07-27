@@ -7,18 +7,18 @@ import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
-const createOrUpdateUser = async (authtoken: string | undefined) => {
+const createOrUpdateUser = async (authtoken?: string | undefined): Promise<AxiosResponse> => {
   return await axios.post(
-      `${process.env.REACT_APP_API}/create-or-update-user`,
+      'http://localhost:8000/api/create-or-update-user',
       {},
       {
       headers: {
           authtoken,
-      },
+      }
   });
-};
+}
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
