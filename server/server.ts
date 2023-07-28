@@ -26,7 +26,6 @@ app.use(bodyParser.json({limit: '2mb'}));
 app.use(cors());
 
 // routes middleware
-// app.use('/api', authCheck);
 fs.readdirSync('./routes').map((route: string) => app.use('/api', require('./routes/' + route) as RequestHandler))
 
 // port

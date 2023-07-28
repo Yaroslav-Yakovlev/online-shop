@@ -1,13 +1,19 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export interface UserState {
+    name?: string,
     email: string | null | undefined,
-    idToken?: string,
+    idToken?: string | undefined,
+    role?: string | undefined,
+    _id?: string | undefined,
 }
 
 const initialState: UserState = {
+    name: '',
     email: null,
     idToken: undefined,
+    role: 'subscriber',
+    _id: undefined,
 };
 
 export const userSlice = createSlice({
@@ -15,12 +21,18 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         logGetInUser(state, action: PayloadAction<UserState>) {
-            const { email, idToken } = action.payload;
-            return { ...state, email, idToken };
+            const { name, email, idToken, role, _id } = action.payload;
+            return { ...state, name, email, idToken, role, _id };
 
         },
-        logOut(state) {
-            return { ...state, email: null, idToken: undefined };
+        logOut() {
+            return {
+                name: '',
+                email: null,
+                idToken: undefined,
+                role: 'subscriber',
+                _id: '',
+            };
         }
     }
 });
