@@ -7,18 +7,7 @@ import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
-import axios, {AxiosResponse} from 'axios';
-
-const createOrUpdateUser = async (authtoken?: string | undefined): Promise<AxiosResponse> => {
-  return await axios.post(
-      'http://localhost:8000/api/create-or-update-user',
-      {},
-      {
-      headers: {
-          authtoken,
-      }
-  });
-}
+import {createOrUpdateUserRequest} from "../../functions/auth";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
@@ -26,15 +15,14 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const {user} = useAppSelector((state) => state);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user && user.idToken) {
             navigate('/');
         }
     }, [user]);
-
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -45,17 +33,20 @@ const Login: React.FC = () => {
             const {user} = result;
             const idTokenResult = await user?.getIdTokenResult();
 
-            createOrUpdateUser(idTokenResult?.token)
-                .then((res) => console.log('create or update res', res))
-                .catch();
+            createOrUpdateUserRequest(idTokenResult?.token)
+                .then((res) => {
+                    const payload = {
+                        name: res.data.name,
+                        email: res.data.email,
+                        idToken: idTokenResult?.token,
+                        role: res.data.role,
+                        _id: res.data._id,
+                    }
+                        dispatch(logGetInUser(payload));
 
-            // const payload = {
-            //     email: user?.email,
-            //     idToken: idTokenResult?.token,
-            // };
-            // dispatch(logGetInUser(payload));
-            //
-            // navigate('/');
+                    navigate('/');
+                })
+                .catch(error => console.log(error));
 
         } catch (error) {
             if (error instanceof Error) {
@@ -66,19 +57,24 @@ const Login: React.FC = () => {
     };
 
     const googleLogin = async () => {
-        setLoading(true);
         const result = await auth.signInWithPopup(googleAuthProvider);
         const {user} = result;
         const idTokenResult = await user?.getIdTokenResult();
 
-        const payload = {
-            email: user?.email,
-            idToken: idTokenResult?.token,
-        };
+        createOrUpdateUserRequest(idTokenResult?.token)
+            .then((res) => {
+                const payload = {
+                    name: res.data.name,
+                    email: res.data.email,
+                    idToken: idTokenResult?.token,
+                    role: res.data.role,
+                    _id: res.data._id,
+                }
+                dispatch(logGetInUser(payload));
 
-        dispatch(logGetInUser(payload));
-
-        navigate('/');
+                navigate('/');
+            })
+            .catch(error => console.log(error));
     };
 
     const loginForm = () => (

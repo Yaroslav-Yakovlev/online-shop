@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import React, {useEffect} from 'react';
+import {Route, Routes, useNavigate} from "react-router-dom";
+import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import Home from "./pages/Home";
@@ -8,29 +8,39 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Header from "./components/nav/Header";
 import RegisterComplete from "./pages/auth/RegisterComplete";
-import { useAppDispatch } from "./hooks";
-import { auth } from "./firebase";
-import { logGetInUser } from "./features/userSlice";
-import ForgotPassword from "./pages/auth/ForgotPassword";
+import {useAppDispatch} from "./hooks";
 
+import {auth} from "./firebase";
+import {logGetInUser} from "./features/userSlice";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import {currentUserRequest} from "./functions/auth";
 
 const App: React.FC = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
-         const unsubscribe = auth.onAuthStateChanged(async (user) => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
                 const idTokenResult = await user.getIdTokenResult();
 
-                const payload = {
-                    email: user.email,
-                    idToken: idTokenResult.token,
-                };
+                currentUserRequest(idTokenResult?.token)
+                    .then((res) => {
+                        const payload = {
+                            name: res.data.name,
+                            email: res.data.email,
+                            idToken: idTokenResult?.token,
+                            role: res.data.role,
+                            _id: res.data._id,
+                        }
+                        dispatch(logGetInUser(payload));
 
-                dispatch(logGetInUser(payload));
+                        navigate('/');
+                    })
+                    .catch(error => console.log(error));
             }
-         });
-         return () => unsubscribe();
+        });
+        return () => unsubscribe();
     }, []);
 
     return (

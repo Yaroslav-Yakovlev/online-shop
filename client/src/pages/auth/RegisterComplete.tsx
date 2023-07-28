@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import { auth } from '../../firebase';
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-
+import {auth} from '../../firebase';
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import {useAppDispatch} from "../../hooks";
+import {logGetInUser} from "../../features/userSlice";
+import {createOrUpdateUserRequest} from "../../functions/auth";
 
 const RegisterComplete: React.FC = () => {
     const [email, setEmail] = useState<string | null>('');
     const [password, setPassword] = useState<string>('');
 
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,7 +32,10 @@ const RegisterComplete: React.FC = () => {
         }
 
         try {
-            const result = await auth.signInWithEmailLink(email ?? '', window.location.href);
+            const result = await auth.signInWithEmailLink(
+                email ?? '',
+                window.location.href
+            );
 
             if (result.user?.emailVerified) {
                 window.localStorage.removeItem('emailForRegistration');
@@ -37,6 +43,21 @@ const RegisterComplete: React.FC = () => {
                 let user = auth.currentUser;
                 await user?.updatePassword(password);
                 const idTokenResult = await user?.getIdTokenResult();
+
+                createOrUpdateUserRequest(idTokenResult?.token)
+                    .then((res) => {
+                        const payload = {
+                            name: res.data.name,
+                            email: res.data.email,
+                            idToken: idTokenResult?.token,
+                            role: res.data.role,
+                            _id: res.data._id,
+                        }
+                        dispatch(logGetInUser(payload));
+
+                        navigate('/');
+                    })
+                    .catch(error => console.log(error));
 
                 navigate('/');
             }
@@ -49,29 +70,29 @@ const RegisterComplete: React.FC = () => {
 
     const CompleteRegisterForm = () => (
         <form onSubmit={handleSubmit}>
-        <input
-            type='email'
-            className='form-control'
-            value={email ?? ''}
-            disabled
-        />
+            <input
+                type='email'
+                className='form-control'
+                value={email ?? ''}
+                disabled
+            />
 
-        <br/>
+            <br/>
 
-        <input
-            type='password'
-            className='form-control'
-            value={password ?? ''}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder='Password'
-            autoFocus
-            autoComplete="current-password"
-        />
+            <input
+                type='password'
+                className='form-control'
+                value={password ?? ''}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder='Password'
+                autoFocus
+                autoComplete="current-password"
+            />
 
-        <button type='submit' className='btn btn-primary mt-3'>
-            Complete Register
-        </button>
-    </form>
+            <button type='submit' className='btn btn-primary mt-3'>
+                Complete Register
+            </button>
+        </form>
     );
 
     return (
