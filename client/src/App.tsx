@@ -9,6 +9,8 @@ import Register from "./pages/auth/Register";
 import Header from "./components/nav/Header";
 import RegisterComplete from "./pages/auth/RegisterComplete";
 import {useAppDispatch} from "./hooks";
+import History from "./pages/user/History";
+import UserRoute from "./components/routes/UserRoute";
 
 import {auth} from "./firebase";
 import {logGetInUser} from "./features/userSlice";
@@ -44,17 +46,18 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <>
-            <Header/>
-            <ToastContainer/>
-            <Routes>
-                <Route path='/' element={<Home/>}/>
-                <Route path='/login' element={<Login/>}/>
-                <Route path='/register' element={<Register/>}/>
-                <Route path='register/complete' element={<RegisterComplete/>}/>
-                <Route path='forgot/password' element={<ForgotPassword/>}/>
-            </Routes>
-        </>
+            <>
+                <Header/>
+                <ToastContainer/>
+                <Routes>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='/register' element={<Register/>}/>
+                    <Route path='register/complete' element={<RegisterComplete/>}/>
+                    <Route path='forgot/password' element={<ForgotPassword/>}/>
+                    <Route path='/user/history' element={<UserRoute><History/></UserRoute>}/>
+                </Routes>
+            </>
     );
 }
 

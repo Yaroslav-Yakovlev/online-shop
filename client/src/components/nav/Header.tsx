@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    let userEmail = useAppSelector((state) => (state.user.email));
+    let userEmail = useAppSelector((state) => state.user.email);
 
     const handleClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);

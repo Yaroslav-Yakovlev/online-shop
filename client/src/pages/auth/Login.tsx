@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from "antd";
 import {MailOutlined, GoogleOutlined} from '@ant-design/icons';
 import {auth, googleAuthProvider} from "../../firebase";
-import {useAppDispatch, useAppSelector} from "../../hooks";
+import {useAppDispatch} from "../../hooks";
 import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
+import {AxiosResponse} from 'axios';
 import {createOrUpdateUserRequest} from "../../functions/auth";
 
 const Login: React.FC = () => {
@@ -14,15 +15,22 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>('111111');
     const [loading, setLoading] = useState<boolean>(false);
 
-    const {user} = useAppSelector((state) => state);
+    // const {user} = useAppSelector((state) => state);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (user && user.idToken) {
-            navigate('/');
+    // useEffect(() => {
+    //     if (user && user.idToken)
+    //         navigate('/');
+    // }, [user]);
+
+    const roleBasedRedirect = (res: AxiosResponse) => {
+        if (res.data.role === 'admin') {
+            navigate('/admin/dashboard');
+        } else {
+            navigate('/user/history');
         }
-    }, [user]);
+    };
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -44,8 +52,9 @@ const Login: React.FC = () => {
                     }
                         dispatch(logGetInUser(payload));
 
-                    navigate('/');
+                        roleBasedRedirect(res);
                 })
+
                 .catch(error => console.log(error));
 
         } catch (error) {
@@ -72,7 +81,8 @@ const Login: React.FC = () => {
                 }
                 dispatch(logGetInUser(payload));
 
-                navigate('/');
+                roleBasedRedirect(res);
+
             })
             .catch(error => console.log(error));
     };
