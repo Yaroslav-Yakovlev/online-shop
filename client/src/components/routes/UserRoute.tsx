@@ -1,19 +1,16 @@
 import React from 'react';
 import {Outlet} from "react-router-dom";
 import {useAppSelector} from "../../hooks";
+import LoadingToRedirect from "./LoadingToRedirect";
 
-interface UserRouteProps {
-    children: React.ReactNode;
-}
-
-const UserRoute: React.FC<UserRouteProps> = ({ children, ...rest }) => {
+const UserRoute: React.FC = () => {
     const { user }  = useAppSelector((state) => state);
 
     return (
         user && user.idToken ? (
             <Outlet/>
         ) : (
-            <h1 className='text-danger'>Loading...</h1>
+            <LoadingToRedirect/>
         )
     )
 };

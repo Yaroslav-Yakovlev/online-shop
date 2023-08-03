@@ -46,18 +46,20 @@ const App: React.FC = () => {
     }, []);
 
     return (
-            <>
-                <Header/>
-                <ToastContainer/>
-                <Routes>
-                    <Route path='/' element={<Home/>}/>
-                    <Route path='/login' element={<Login/>}/>
-                    <Route path='/register' element={<Register/>}/>
-                    <Route path='register/complete' element={<RegisterComplete/>}/>
-                    <Route path='forgot/password' element={<ForgotPassword/>}/>
-                    <Route path='/user/history' element={<UserRoute><History/></UserRoute>}/>
-                </Routes>
-            </>
+        <>
+            <Header/>
+            <ToastContainer/>
+            <Routes>
+                <Route path='/' element={<Home/>}/>
+                <Route path='/login' element={<Login/>}/>
+                <Route path='/register' element={<Register/>}/>
+                <Route path='register/complete' element={<RegisterComplete/>}/>
+                <Route path='forgot/password' element={<ForgotPassword/>}/>
+                <Route element={<UserRoute/>}>
+                    <Route path='/user/history' element={<History/>}/>
+                </Route>
+            </Routes>
+        </>
     );
 }
 
