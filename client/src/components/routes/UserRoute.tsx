@@ -4,7 +4,7 @@ import {useAppSelector} from "../../hooks";
 import LoadingToRedirect from "./LoadingToRedirect";
 
 const UserRoute: React.FC = () => {
-    const { user }  = useAppSelector((state) => state);
+    const { user } = useAppSelector((state) => state);
 
     return (
         user && user.idToken ? (

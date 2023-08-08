@@ -23,8 +23,8 @@ export const userSlice = createSlice({
         logGetInUser(state, action: PayloadAction<UserState>) {
             const { name, email, idToken, role, _id } = action.payload;
             return { ...state, name, email, idToken, role, _id };
-
         },
+
         logOut() {
             return {
                 name: '',
