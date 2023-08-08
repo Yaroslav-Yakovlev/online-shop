@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from "antd";
 import {MailOutlined, GoogleOutlined} from '@ant-design/icons';
 import {auth, googleAuthProvider} from "../../firebase";
-import {useAppDispatch, useAppSelector} from "../../hooks";
+import {useAppDispatch} from "../../hooks";
 import {logGetInUser} from "../../features/userSlice";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
@@ -12,7 +12,7 @@ import {createOrUpdateUserRequest} from "../../functions/auth";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
-    const [password, setPassword] = useState<string>('111111');
+    const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     // const {user} = useAppSelector((state) => state);

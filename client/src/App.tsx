@@ -11,6 +11,8 @@ import RegisterComplete from "./pages/auth/RegisterComplete";
 import {useAppDispatch} from "./hooks";
 import History from "./pages/user/History";
 import UserRoute from "./components/routes/UserRoute";
+import UpdatePassword from "./pages/user/UpdatePassword";
+import Wishlist from "./pages/user/Wishlist";
 
 import {auth} from "./firebase";
 import {logGetInUser} from "./features/userSlice";
@@ -55,8 +57,11 @@ const App: React.FC = () => {
                 <Route path='/register' element={<Register/>}/>
                 <Route path='register/complete' element={<RegisterComplete/>}/>
                 <Route path='forgot/password' element={<ForgotPassword/>}/>
+
                 <Route element={<UserRoute/>}>
                     <Route path='/user/history' element={<History/>}/>
+                    <Route path='/user/password' element={<UpdatePassword/>}/>
+                    <Route path='/user/wishlist' element={<Wishlist/>}/>
                 </Route>
             </Routes>
         </>

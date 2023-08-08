@@ -27,7 +27,7 @@ const RegisterComplete: React.FC = () => {
         }
 
         if (password.length < 6) {
-            toast.error('Password must be at least 6 characters long');
+            toast.error('UpdatePassword must be at least 6 characters long');
             return;
         }
 
@@ -84,7 +84,7 @@ const RegisterComplete: React.FC = () => {
                 className='form-control'
                 value={password ?? ''}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder='Password'
+                placeholder='UpdatePassword'
                 autoFocus
                 autoComplete="current-password"
             />
