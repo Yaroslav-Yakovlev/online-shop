@@ -12,7 +12,6 @@ export const createOrUpdateUser = async (req: AuthenticatedRequest, res: Respons
         {new: true},
     );
     if (user) {
-        console.log('user updated', user)
         res.json(user);
     } else {
         const newUser = await new User({
@@ -20,7 +19,6 @@ export const createOrUpdateUser = async (req: AuthenticatedRequest, res: Respons
             name: email.split("@")[0],
             picture,
         }).save();
-        console.log('user created', newUser)
     }
 };
 
