@@ -11,8 +11,10 @@ import RegisterComplete from "./pages/auth/RegisterComplete";
 import {useAppDispatch} from "./hooks";
 import History from "./pages/user/History";
 import UserRoute from "./components/routes/UserRoute";
+import AdminRoute from './components/routes/AdminRoute';
 import UpdatePassword from "./pages/user/UpdatePassword";
 import Wishlist from "./pages/user/Wishlist";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import {auth} from "./firebase";
 import {logGetInUser} from "./features/userSlice";
@@ -45,7 +47,7 @@ const App: React.FC = () => {
             }
         });
         return () => unsubscribe();
-    }, []);
+    }, []);  // dispatch?
 
     return (
         <>
@@ -63,6 +65,11 @@ const App: React.FC = () => {
                     <Route path='/user/password' element={<UpdatePassword/>}/>
                     <Route path='/user/wishlist' element={<Wishlist/>}/>
                 </Route>
+
+                <Route element={<AdminRoute/>}>
+                    <Route path='/admin/dashboard' element={<AdminDashboard/>} />
+                </Route>
+
             </Routes>
         </>
     );

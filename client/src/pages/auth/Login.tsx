@@ -12,7 +12,7 @@ import {createOrUpdateUserRequest} from "../../functions/auth";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('yarychyarych@gmail.com');
-    const [password, setPassword] = useState<string>('');
+    const [password, setPassword] = useState<string>('111111');
     const [loading, setLoading] = useState<boolean>(false);
 
     // const {user} = useAppSelector((state) => state);

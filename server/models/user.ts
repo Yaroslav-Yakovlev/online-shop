@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>(
         name: String,
         email: {
             type: String,
-            require: true,
+            required: true,
             index: true,
         },
         picture: String,

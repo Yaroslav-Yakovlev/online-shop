@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
-import {IUser} from "../models/user";
+import {IUser, User} from "../models/user";
 
-const admin = require('../firebase');
-const User = require('../models/user');
+
+const admin = require('../firebase/index');
+
 
 type AuthenticatedRequest = Request & { user: IUser };
 
@@ -26,7 +27,11 @@ export const adminCheck = async (req: AuthenticatedRequest, res: Response, next:
 
     const adminUser = await User.findOne({email}).exec();
 
-    if (adminUser.role !== 'admin') {
+    if (!adminUser) {
+        res.status(403).json({
+            error: 'User not found',
+        })
+    } else if (adminUser.role !== 'admin') {
         res.status(403).json({
             error: 'Admin resource. Access denied',
         });
