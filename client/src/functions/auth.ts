@@ -21,3 +21,16 @@ export const currentUserRequest = async (authtoken?: string | undefined): Promis
             }
         });
 };
+
+export const currentAdminRequest = async (authtoken?: string | undefined): Promise<AxiosResponse> => {
+    return await axios.post(
+        'http://localhost:8000/api/current-admin',
+        {},
+        {
+            headers: {
+                authtoken,
+            }
+        });
+};
+
+
